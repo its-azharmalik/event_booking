@@ -38,7 +38,30 @@ app.post('/testcloudinary', upload.single("url") ,async (req,res) =>{
     } catch (err) {
         console.log(err.message);
     }
-})
+});
+
+app.post('/testcloudinarymultiple', upload.array("urls") ,async (req,res) =>{
+    try {
+        const images = req.files.map((file) => file.path);
+        if(!images) res.status(500).json({
+            err: "PLease attach the files to test"
+        });
+        const options = {
+            use_filename: true,
+            unique_filename: false,
+            overwrite: true,
+        };
+        let result = [];
+        for(const image of images){
+            const imgUrl = await cloudinary.uploader.upload(image,options);
+            result.push(imgUrl);
+        }
+        await Promise.all(result)
+        res.send(result);
+    } catch (err) {
+        console.log(err.message);
+    }
+});
 
 app.listen(PORT, () => {
     console.log(`App running on PORT ${`${PORT}`.bold.yellow}`);
