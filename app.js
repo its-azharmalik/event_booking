@@ -27,6 +27,9 @@ app.get('/home', (req,res) =>{
 app.post('/testcloudinary', upload.single("url") ,async (req,res) =>{
     try {
         const image = req.file.path;
+        if(!image) res.status(500).json({
+            err: "PLease attach the files to test"
+        });
         console.log(image)
         const options = {
             use_filename: true,
