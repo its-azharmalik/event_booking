@@ -7,6 +7,7 @@ const { cloudinary } = require("./config/cloudinary");
 const { upload } = require('./config/multer');
 const cors = require("cors");
 const db = require('./config/db.config');
+const errorList = require('./config/errorList');
 
 dotenv.config();
 
@@ -26,10 +27,10 @@ app.get('/home', (req,res) =>{
 
 app.post('/testcloudinary', upload.single("url") ,async (req,res) =>{
     try {
-        const image = req.file.path;
-        if(!image) res.status(500).json({
-            err: "PLease attach the files to test"
+        if(!req.files) res.status(500).json({
+            err: errorList.noFilesAttached
         });
+        const image = req.file.path;
         console.log(image)
         const options = {
             use_filename: true,
@@ -45,10 +46,10 @@ app.post('/testcloudinary', upload.single("url") ,async (req,res) =>{
 
 app.post('/testcloudinarymultiple', upload.array("urls") ,async (req,res) =>{
     try {
-        const images = req.files.map((file) => file.path);
-        if(!images) res.status(500).json({
-            err: "PLease attach the files to test"
+        if(!req.files) res.status(500).json({
+            err: errorList.noFilesAttached
         });
+        const images = req.files.map((file) => file.path);
         const options = {
             use_filename: true,
             unique_filename: false,
