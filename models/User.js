@@ -32,10 +32,6 @@ const userSchema = new mongoose.Schema({
 		type: String,
 		trim: true,
 	},
-	phone: {
-		type: Number,
-		trim: true,
-	},
 	createdEvents: [
 		{
 			type: mongoose.Schema.Types.ObjectId,
